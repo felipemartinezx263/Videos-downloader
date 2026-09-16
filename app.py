@@ -14,13 +14,14 @@ def download_video():
     if not url:
         return jsonify({'error': 'No URL provided'}), 400
 
-    # Configure yt-dlp to request streams using the Android client
+    # Configure yt-dlp to request streams using mobile clients to bypass YouTube cloud blocks
     ydl_opts = {
         'format': 'best',
         'quiet': True,
         'extractor_args': {
             'youtube': {
-                'player_client': ['android', 'ios']
+                'player_client': ['android', 'ios', 'web_creator'],
+                'player_skip': ['webpage', 'configs']
             }
         }
     }
