@@ -14,7 +14,16 @@ def download_video():
     if not url:
         return jsonify({'error': 'No URL provided'}), 400
 
-    ydl_opts = {'format': 'best', 'quiet': True}
+    # Configure yt-dlp to request streams using the Android client
+    ydl_opts = {
+        'format': 'best',
+        'quiet': True,
+        'extractor_args': {
+            'youtube': {
+                'player_client': ['android', 'ios']
+            }
+        }
+    }
 
     try:
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
@@ -28,6 +37,5 @@ def download_video():
         return jsonify({'status': 'error', 'message': str(e)}), 500
 
 if __name__ == '__main__':
-    # Render assigns dynamic ports via environment variables
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)
