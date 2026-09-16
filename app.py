@@ -14,14 +14,17 @@ def download_video():
     if not url:
         return jsonify({'error': 'No URL provided'}), 400
 
-    # Configure yt-dlp to request streams using mobile clients to bypass YouTube cloud blocks
+    # Locate cookies.txt in the same directory as app.py
+    cookie_path = os.path.join(os.path.dirname(__file__), 'cookies.txt')
+
     ydl_opts = {
         'format': 'best',
         'quiet': True,
+        # Load the cookies uploaded to GitHub
+        'cookiefile': cookie_path if os.path.exists(cookie_path) else None,
         'extractor_args': {
             'youtube': {
-                'player_client': ['android', 'ios', 'web_creator'],
-                'player_skip': ['webpage', 'configs']
+                'player_client': ['tv_embedded', 'mweb', 'ios']
             }
         }
     }
